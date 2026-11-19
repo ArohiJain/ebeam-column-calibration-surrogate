@@ -194,13 +194,16 @@ def generate_summary_plots(
 ) -> None:
     """Save diagnostic plots for GitHub README documentation."""
     os.makedirs(output_dir, exist_ok=True)
-    plt.style.use("seaborn-v0_8-whitegrid")
+    try:
+        plt.style.use("seaborn-v0_8-whitegrid")
+    except OSError:
+        plt.style.use("default")
 
     # --- Figure 1: Surrogate Parity & Uncertainty Budget ---
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4.8), dpi=160)
 
     r2 = r2_score(Y_test[:, 0], pred_x)
-    rmse = root_mean_squared_error(Y_test[:, 0], pred_x)
+    rmse = float(np.sqrt(np.mean((Y_test[:, 0] - pred_x) ** 2)))
     ax1.errorbar(
         Y_test[:, 0],
         pred_x,

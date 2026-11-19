@@ -179,14 +179,10 @@ if __name__ == "__main__":
     surrogate = EBeamSurrogateUQ(random_state=42).fit(X_train, Y_train)
     px, sx, py, sy = surrogate.predict(X_test)
 
-    print(
-        f"Test Accuracy X -> R2: {r2_score(Y_test[:, 0], px):.5f}, "
-        f"RMSE: {root_mean_squared_error(Y_test[:, 0], px):.3f} nm"
-    )
-    print(
-        f"Test Accuracy Y -> R2: {r2_score(Y_test[:, 1], py):.5f}, "
-        f"RMSE: {root_mean_squared_error(Y_test[:, 1], py):.3f} nm"
-    )
+    rmse_x = float(np.sqrt(np.mean((Y_test[:, 0] - px) ** 2)))
+    rmse_y = float(np.sqrt(np.mean((Y_test[:, 1] - py) ** 2)))
+    print(f"Test Accuracy X -> R2: {r2_score(Y_test[:, 0], px):.5f}, RMSE: {rmse_x:.3f} nm")
+    print(f"Test Accuracy Y -> R2: {r2_score(Y_test[:, 1], py):.5f}, RMSE: {rmse_y:.3f} nm")
 
     x_op = np.array([423.0, 3.8, -1.5, 2.0])
     jitter = np.array([0.35, 0.15, 0.15, 0.01])
